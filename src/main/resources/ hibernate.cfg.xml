@@ -1,0 +1,30 @@
+<!-- Give the hibernate configuration -->
+<hibernate-configuration xmlns="http://www.hibernate.org/xsd/orm/cfg">
+
+    <!-- By default, the hibernate configuration will give the session-factory -->
+    <session-factory>
+
+        <!-- 1st configure the DB details, which DB you're going to use -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+
+        <!-- 2nd Give the connection url, with the tablename-->
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/studentTable</property>
+
+        <!-- 3rd Enter the username and password of that DB-->
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">0000</property>
+
+        <!-- In the DB if we don't that table, then we're allowing hibernate to create table by auto using hibernate mapping to data definition language(hbm2ddl)-->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!--Hibernate is using JDBC internally, JDBC is using queries to execute, so to see the qureies, use this property-->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- To see the proper formatted query use this -->
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- SQl Quries will be different for each DBMS, so it is not necessary to mention which dialect we're using, but save to use-->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+    </session-factory>
+</hibernate-configuration>
