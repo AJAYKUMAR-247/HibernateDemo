@@ -3,6 +3,7 @@ package org.example;
 import jakarta.persistence.*;
 
 import javax.management.ObjectName;
+import java.util.List;
 
 
 // We have to add the @Entity annotation to the class, so that hibernate will use this class to create a entity(table)
@@ -30,9 +31,19 @@ public class Student {
     @jakarta.persistence.OneToOne
     private OneToOne oneToOne;
 
-    public OneToOne getOneToOne() {
-        return oneToOne;
-    }
+    // OneToMany will create a seperate table to store the relation between its and student.
+    // If you want to stop that table creation, you can use this (mappedBy = "stu"), this indicates that the table will be handled and mapped by the
+    // stu variable in the OneToMany Entity, this will not create a table.    @jakarta.persistence.OneToMany(mappedBy = "stu")
+    @jakarta.persistence.OneToMany
+    private List<OneToMany> oneToMany;
+
+
+    //ManyToMany means students have multiple object and the object will also have multiple student
+    //A student can be mapped to many object basically
+    //When we use ManyToMany, it will think its job to create a table, so we have to say which one is going to take care of that(mappedBy = "students")
+    @jakarta.persistence.ManyToMany(mappedBy = "students")
+    private List<ManyToMany> manyTOMany;
+
 
     @Override
     public String toString() {
@@ -42,7 +53,29 @@ public class Student {
                 ", marks=" + marks +
                 ", laptop=" + laptop +
                 ", oneToOne=" + oneToOne +
+                ", oneToMany=" + oneToMany +
+                ", manyTOMany=" + manyTOMany +
                 '}';
+    }
+
+    public List<ManyToMany> getManyTOMany() {
+        return manyTOMany;
+    }
+
+    public void setManyTOMany(List<ManyToMany> manyTOMany) {
+        this.manyTOMany = manyTOMany;
+    }
+
+    public List<OneToMany> getOneToMany() {
+        return oneToMany;
+    }
+
+    public void setOneToMany(List<OneToMany> oneToMany) {
+        this.oneToMany = oneToMany;
+    }
+
+    public OneToOne getOneToOne() {
+        return oneToOne;
     }
 
     public void setOneToOne(OneToOne oneToOne) {

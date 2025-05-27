@@ -5,8 +5,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
+
+        Student s1 = new Student();
+        Student s2 = new Student();
 
         OneToOne oto = new OneToOne();
         oto.setName("OneToone");
@@ -17,13 +22,44 @@ public class Main {
         lap.setModal("Rog");
         lap.setPrice(50000);
 
-        Student s1 = new Student();
+        // Here s1 have two things, that's called OneToMany & ManyToOne.
+        OneToMany otm1 = new OneToMany();
+        otm1.setName("one");
+        otm1.setRollno(1);
+        otm1.setStu(s1);
+
+        OneToMany otm2 = new OneToMany();
+        otm2.setRollno(2);
+        otm2.setName("two");
+        otm2.setStu(s1);
+
+        ManyToMany mtm1 = new ManyToMany();
+        mtm1.setName("many1");
+        mtm1.setRollno(1);
+        mtm1.setStudents(Arrays.asList(s1, s2));
+
+        ManyToMany mtm2 = new ManyToMany();
+        mtm2.setRollno(2);
+        mtm2.setName("Many1");
+        mtm2.setStudents(Arrays.asList(s1, s2));
+
         s1.setRollno(1);
         s1.setName("Ajay");
         s1.setMarks(99);
         s1.setLaptop(lap);
         s1.setOneToOne(oto);
+        s1.setOneToMany(Arrays.asList(otm1, otm2));
+        s1.setManyTOMany(Arrays.asList(mtm1, mtm2));
         System.out.println(s1);
+
+        s2.setRollno(2);
+        s2.setName("Kumar");
+        s2.setMarks(100);
+        s2.setLaptop(lap);
+        s2.setOneToOne(oto);
+        s2.setOneToMany(Arrays.asList(otm1, otm2));
+        s2.setManyTOMany(Arrays.asList(mtm1, mtm2));
+        System.out.println(s2);
 
         // To configure the java code to a DB using hibernate, hibernate is providing a class called Configuration.
         Configuration cfg = new Configuration();
@@ -31,7 +67,9 @@ public class Main {
 
         // The Student class should be annotated, so that hibernate will use that
         cfg.addAnnotatedClass(Student.class);
-        cfg.addAnnotatedClass(Student.class);
+        cfg.addAnnotatedClass(OneToMany.class);
+        cfg.addAnnotatedClass(OneToOne.class);
+        cfg.addAnnotatedClass(OneToMany.class);
 
         //After creating the Configuration obj, configure it.
         //But with which DB, which table it will configure, to give that please add that configuration xml file in the resources
@@ -52,6 +90,9 @@ public class Main {
         // After creating the object, using the persist method we can save that.
         session.persist(s1);
         session.persist(oto);
+        session.persist(otm1);
+        session.persist(otm2);
+
 
         //Everytime when we're trying to save the data it ia a transaction, so after each transaction we have to commit that otherwise it will not save.
         //commit belongs to transaction
