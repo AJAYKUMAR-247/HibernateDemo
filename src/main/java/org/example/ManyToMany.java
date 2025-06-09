@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
@@ -12,7 +13,11 @@ public class ManyToMany {
     private int rollno;
     private String name;
 
-    @jakarta.persistence.ManyToMany
+
+    // By default in hibernate, FetchType will be always LAZY (FetchType.LAZY), why because if the stored data is huge then it is waste to Fetch all the data
+    // that's why by default it is Lazy, means it will cal the require data whenever we're using it.
+    // If you want to Fetch all the details, use FetchType.EAGER
+    @jakarta.persistence.ManyToMany(fetch = FetchType.EAGER)
     private List<Student> students;
 
 

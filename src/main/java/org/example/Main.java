@@ -4,9 +4,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.Arrays;
+import java.util.Queue;
 
+//By default java don't have a cache mechanism, But hibernate will give you that cache mechanism
+//Caching basically means if you're executing the same query which you have executed before then it will not get all the data from the DB, because it will take some data from the cache
+//cache will store the data, which are queried in that particular session
 public class Main {
     public static void main(String[] args) {
 
@@ -92,6 +97,8 @@ public class Main {
         session.persist(oto);
         session.persist(otm1);
         session.persist(otm2);
+        session.persist(mtm1);
+        session.persist(mtm2);
 
 
         //Everytime when we're trying to save the data it ia a transaction, so after each transaction we have to commit that otherwise it will not save.
@@ -110,10 +117,31 @@ public class Main {
         // Methods to delete the data
         // To delete a data 1st you have to fetch first and then you have to delete it.
         Student stu = session.get(Student.class, 1);
+
+        //Alternative of get is load, what is the diff is get is EAGER, and load is Lazy.
+        //But load is a deprecated, the alternative is
+        //This will also works like Lazy, will only execute the query when we're using that.
+        Student stu2 = session.byId(Student.class).getReference(2);
+
+        // To get the details from the DB using HQL,
+        Query<Student> query = session.createQuery("from Student where id = 1", Student.class);
+        Student stu3 = query.getSingleResult();
+        System.out.println(stu3);
+
+        //Prepared Statememt in HQL
+
+        String stuName = "Ajay";
+
+        // Use question mark like, as we're using commonly for the prepared statement, but you have to mention the ?along with the id, and you have to set the parameter
+        Query<Student> query1 = session.createQuery("from Student where name=?1");
+        query1.setParameter(1, stuName);
+        Student name = query1.getSingleResult();
+
+        System.out.println(name);
+
+
         session.remove(stu);
         session.close();
         sf.close();
-
-
     }
 }
